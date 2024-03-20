@@ -10,7 +10,8 @@ class RenameVisitor : public clang::RecursiveASTVisitor<RenameVisitor> {
 public:
   explicit RenameVisitor(clang::Rewriter rewriter, IdType type,
                          clang::StringRef cur_name, clang::StringRef new_name)
-      : rewriter(rewriter), type(type), cur_name(cur_name), new_name(new_name) {}
+      : rewriter(rewriter), type(type), cur_name(cur_name), new_name(new_name) {
+  }
 
   bool VisitFunctionDecl(clang::FunctionDecl *func) {
     if (type == IdType::Function && func->getName() == cur_name) {
@@ -153,7 +154,9 @@ protected:
     }
 
     std::vector<std::pair<std::string, IdType>> id_type = {
-        {"var", IdType::Variable}, {"func", IdType::Function}, {"class", IdType::Structure}};
+        {"var", IdType::Variable},
+        {"func", IdType::Function},
+        {"class", IdType::Structure}};
     size_t i;
     for (i = 0; i < id_type.size(); i++) {
       if (params[0].second == id_type[i].first) {
