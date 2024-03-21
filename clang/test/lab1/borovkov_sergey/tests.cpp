@@ -7,6 +7,74 @@
 // RUN: -plugin-arg-rename new-name=new_var %t/rename_var.cpp
 // RUN: FileCheck %s < %t/rename_var.cpp --check-prefix=VAR
 
+//--- rename_var.cpp
+int func() {
+  int a = 2, b = 2;
+  a = b + a;
+  a++;
+  return a;
+}
+//--- rename_non_existent_var.cpp
+int func() {
+  int a = 2;
+  int b = 3;
+  b += a;
+  a++;
+  return b - a;
+}
+//--- rename_func.cpp
+int function(int param) {
+    int a;
+    a = 2;
+    return param + a;
+}
+int other_func(){
+  function(3);
+  int a = function(2) + 3;
+  return a;
+}
+//--- rename_non_existent_func.cpp
+int func(int a) {
+  int b = 2;
+  return a + b;
+}
+
+void func2() {
+  int c = func(2);
+  int b = func(c) + func(3);
+}
+//--- rename_class.cpp
+class Base{
+ private:
+  int a;
+  int b;
+ public:
+  Base() {}
+  Base(int a, int b): a(a), b(b) {}
+  ~Base();
+};
+
+void func() {
+  Base a;
+  Base* var = new Base(1, 2);
+  delete var;
+}
+//--- rename_non_existent_class.cpp
+class A{
+ private:
+  int var1;
+  double var2;
+ public:
+ A() {};
+ ~A() {};
+};
+
+void func() {
+  A var1;
+  A* var2 = new A;
+  delete var2;
+}
+
 // VAR: int func() {
 // VAR-NEXT: int new_var = 2, b = 2;
 // VAR-NEXT: new_var = b + new_var;
@@ -143,70 +211,3 @@
 //ERROR: Invalid arguments
 //ERROR-NEXT: Specify "-plugin-arg-rename help" for usage
 
-//--- rename_var.cpp
-int func() {
-  int a = 2, b = 2;
-  a = b + a;
-  a++;
-  return a;
-}
-//--- rename_non_existent_var.cpp
-int func() {
-  int a = 2;
-  int b = 3;
-  b += a;
-  a++;
-  return b - a;
-}
-//--- rename_func.cpp
-int function(int param) {
-    int a;
-    a = 2;
-    return param + a;
-}
-int other_func(){
-  function(3);
-  int a = function(2) + 3;
-  return a;
-}
-//--- rename_non_existent_func.cpp
-int func(int a) {
-  int b = 2;
-  return a + b;
-}
-
-void func2() {
-  int c = func(2);
-  int b = func(c) + func(3);
-}
-//--- rename_class.cpp
-class Base{
- private:
-  int a;
-  int b;
- public:
-  Base() {}
-  Base(int a, int b): a(a), b(b) {}
-  ~Base();
-};
-
-void func() {
-  Base a;
-  Base* var = new Base(1, 2);
-  delete var;
-}
-//--- rename_non_existent_class.cpp
-class A{
- private:
-  int var1;
-  double var2;
- public:
- A() {};
- ~A() {};
-};
-
-void func() {
-  A var1;
-  A* var2 = new A;
-  delete var2;
-}
