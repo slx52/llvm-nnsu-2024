@@ -87,14 +87,14 @@ private:
 
 bool registerPlugin(llvm::StringRef Name, llvm::FunctionPassManager &FPM,
                     llvm::ArrayRef<llvm::PassBuilder::PipelineElement>) {
-  if (Name == "borovkov-mul-shifts") {
+  if (Name == "borovkovmulshifts") {
     FPM.addPass(MulShifts());
     return true;
   }
   return false;
 }
 
-llvm::PassPluginLibraryInfo getMulToBitShiftPluginInfoUpdated() {
+llvm::PassPluginLibraryInfo getMulShiftsBorovkovPluginInfoUpdated() {
   return {LLVM_PLUGIN_API_VERSION, "MulShifts", LLVM_VERSION_STRING,
           [](llvm::PassBuilder &PB) {
             PB.registerPipelineParsingCallback(registerPlugin);
@@ -103,5 +103,5 @@ llvm::PassPluginLibraryInfo getMulToBitShiftPluginInfoUpdated() {
 
 extern "C" LLVM_ATTRIBUTE_WEAK llvm::PassPluginLibraryInfo
 llvmGetPassPluginInfo() {
-  return getMulToBitShiftPluginInfoUpdated();
+  return getMulShiftsBorovkovPluginInfoUpdated();
 }

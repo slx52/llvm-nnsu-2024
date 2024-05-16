@@ -1,4 +1,4 @@
-; RUN: opt -load-pass-plugin=%llvmshlibdir/MulShiftBorovkovPlugin%shlibext -passes=borovkov-mul-shifts -S %s | FileCheck %s
+; RUN: opt -load-pass-plugin=%llvmshlibdir/MulShiftsBorovkovPlugin%shlibext -passes=borovkovmulshifts -S %s | FileCheck %s
 
 ;int f1(int a){
 ;    int c = a + 4;
