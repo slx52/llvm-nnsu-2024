@@ -4,7 +4,7 @@
 #include "llvm/Pass.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
-#include <stack>
+#include <optional>
 
 namespace {
 struct MulShifts : llvm::PassInfoMixin<MulShifts> {
@@ -26,17 +26,20 @@ public:
         llvm::Value *lhs = op->getOperand(0);
         llvm::Value *rhs = op->getOperand(1);
 
-        int lg1 = getLogBase2(lhs);
-        int lg2 = getLogBase2(rhs);
+        auto lg1 = getLogBase2(lhs);
+        auto lg2 = getLogBase2(rhs);
+        if (!lg1 && !lg2) {
+          continue;
+        }
         if (lg1 < lg2) {
           std::swap(lg1, lg2);
           std::swap(lhs, rhs);
         }
 
-        if (lg1 > -1) {
+        if (lg1) {
           llvm::Value *lg_val = llvm::ConstantInt::get(
               llvm::IntegerType::get(Func.getContext(), 32),
-              llvm::APInt(32, lg1));
+              llvm::APInt(32, *lg1));
 
           llvm::Value *val = llvm::BinaryOperator::Create(
               llvm::Instruction::Shl, rhs, lg_val, op->getName(), op);
@@ -55,9 +58,11 @@ public:
   }
 
 private:
-  int getLogBase2(llvm::Value *val) {
+  std::optional<int> getLogBase2(llvm::Value *val) {
     if (llvm::ConstantInt *CI = llvm::dyn_cast<llvm::ConstantInt>(val)) {
-      return CI->getValue().exactLogBase2();
+      if (CI->getValue().isPowerOf2()) {
+        return CI->getValue().exactLogBase2();
+      }
     }
     if (auto *LI = llvm::dyn_cast<llvm::LoadInst>(val)) {
       llvm::Value *Op = LI->getPointerOperand();
@@ -73,14 +78,16 @@ private:
       }
       Op->reverseUseList();
       if (!StInst) {
-        return -2;
+        return std::nullopt;
       }
       if (auto *CI =
               llvm::dyn_cast<llvm::ConstantInt>(StInst->getValueOperand())) {
-        return CI->getValue().exactLogBase2();
+        if (CI->getValue().isPowerOf2()) {
+          return CI->getValue().exactLogBase2();
+        }
       }
     }
-    return -2;
+    return std::nullopt;
   }
 };
 } // namespace

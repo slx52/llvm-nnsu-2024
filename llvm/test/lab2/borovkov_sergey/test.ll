@@ -16,8 +16,8 @@ define dso_local i32 @f1(i32 noundef %0) #0 {
 }
 
 ; CHECK-LABEL: @f1
-; CHECK: %4 = load i32, ptr %2, align 4
-; CHECK-NEXT: %5 = add nsw i32 %4, 4
+; CHECK: %[[load:[0-9]+]] = load i32, ptr %2, align 4
+; CHECK-NEXT: %5 = add nsw i32 %[[load]], 4
 ; CHECK-NEXT: store i32 %5, ptr %3, align 4
 ;}
 
@@ -38,8 +38,8 @@ define dso_local i32 @f2(i32 noundef %0) #0 {
 }
 
 ; CHECK-LABEL: @f2
-; CHECK: %4 = load i32, ptr %2, align 4
-; CHECK-NEXT: %5 = shl i32 %4, 2
+; CHECK: %[[load:[0-9]+]] = load i32, ptr %2, align 4
+; CHECK-NEXT: %5 = shl i32 %[[load]], 2
 ; CHECK-NEXT: store i32 %5, ptr %3, align 4
 ;}
 
@@ -59,8 +59,8 @@ define dso_local void @f3() #0 {
 }
 
 ; CHECK-LABEL: @f3
-; CHECK: %3 = load i32, ptr %1, align 4
-; CHECK-NEXT: %4 = shl i32 %3, 2
+; CHECK: %[[load:[0-9]+]] = load i32, ptr %1, align 4
+; CHECK-NEXT: %4 = shl i32 %[[load]], 2
 ; CHECK-NEXT: store i32 %4, ptr %2, align 4
 ;}
 
@@ -80,8 +80,8 @@ define dso_local void @f4() #0 {
 }
 
 ; CHECK-LABEL: @f4
-; CHECK: %3 = load i32, ptr %1, align 4
-; CHECK-NEXT: %4 = shl i32 %3, 2
+; CHECK: %[[load:[0-9]+]] = load i32, ptr %1, align 4
+; CHECK-NEXT: %4 = shl i32 %[[load]], 2
 ; CHECK-NEXT: store i32 %4, ptr %2, align 4
 ;}
 
