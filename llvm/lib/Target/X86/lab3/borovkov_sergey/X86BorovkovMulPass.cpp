@@ -68,5 +68,4 @@ bool X86BorovkovMulPass::runOnMachineFunction(MachineFunction &machineFunc) {
 } // namespace
 
 static RegisterPass<X86BorovkovMulPass> X("x86mull", "X86 mull pass", false,
-                                     false);
-                                     
+                                          false);
