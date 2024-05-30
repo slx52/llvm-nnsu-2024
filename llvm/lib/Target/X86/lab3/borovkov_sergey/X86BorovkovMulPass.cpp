@@ -37,10 +37,10 @@ bool X86BorovkovMulPass::runOnMachineFunction(MachineFunction &machineFunc) {
             addInstr = &(*opNext);
 
             if (mulInstr->getOperand(0).getReg() ==
-                addInstr->getOperand(1).getReg() &&
+                    addInstr->getOperand(1).getReg() &&
                 mulInstr->getOperand(0).getReg() !=
-                addInstr->getOperand(2).getReg()) {
-                deletedInstructions.emplace_back(mulInstr, addInstr);
+                    addInstr->getOperand(2).getReg()) {
+              deletedInstructions.emplace_back(mulInstr, addInstr);
               changed = true;
               break;
             }
@@ -71,4 +71,3 @@ bool X86BorovkovMulPass::runOnMachineFunction(MachineFunction &machineFunc) {
 
 static RegisterPass<X86BorovkovMulPass> X("x86mull", "X86 mull pass", false,
                                           false);
-                                    

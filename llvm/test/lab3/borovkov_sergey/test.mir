@@ -540,7 +540,9 @@ body:             |
     renamable $xmm0 = nofpexcept MULPDrr killed renamable $xmm0, killed renamable $xmm1, implicit $mxcsr
     renamable $xmm0 = nofpexcept MULPDrr killed renamable $xmm0, killed renamable $xmm2, implicit $mxcsr
     RET64 $xmm0
-    
+
+    ; CHECK: liveins: $xmm0, $xmm1, $xmm2
+
     ; CHECK: renamable $xmm0 = nofpexcept MULPDrr killed renamable $xmm0, killed renamable $xmm1, implicit $mxcsr
     ; CHECK-NEXT: renamable $xmm0 = nofpexcept MULPDrr killed renamable $xmm0, killed renamable $xmm2, implicit $mxcsr
     ; CHECK-NEXT: RET64 $xmm0
@@ -608,5 +610,4 @@ body:             |
     ; CHECK: renamable $xmm0 = nofpexcept MULPDrr killed renamable $xmm0, killed renamable $xmm1, implicit $mxcsr
     ; CHECK-NEXT: renamable $xmm0 = nofpexcept ADDPDrr killed renamable $xmm0, renamable $xmm0, implicit $mxcsr
     ; CHECK-NEXT: RET64 $xmm0
-    
 ...
